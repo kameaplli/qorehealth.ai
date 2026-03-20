@@ -1688,15 +1688,16 @@
 
     // ── EmailJS is loaded in <head> ──
 
-    // ── Log signup to Google Sheets ──
+    // ── Check duplicate & log signup to Google Sheets ──
     const SHEETS_URL = 'https://script.google.com/macros/s/AKfycbwH3pt9UZH8nGGu3YnSNjk-hxCwkPExk46e_w2dbSvsZkVa7ujgHoK_MTgRglaWypV7ug/exec';
-    function logToSheets(email, source) {
-      fetch(SHEETS_URL, {
+    async function checkAndLogToSheets(email, source) {
+      const resp = await fetch(SHEETS_URL, {
         method: 'POST',
-        mode: 'no-cors',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'text/plain' },
         body: JSON.stringify({ email: email, source: source })
-      }).catch(() => {});
+      });
+      const data = await resp.json();
+      return data.result; // 'success' or 'duplicate'
     }
 
     // ── Web3Forms backup notification to contact@qorehealth.ai ──
@@ -1722,13 +1723,22 @@
       statusEl.className = statusEl.className.replace(/--success|--error/g, '').trim();
 
       try {
-        // Send welcome email via EmailJS
+        // Check for duplicate in Google Sheets first
+        const source = form.id === 'heroForm' ? 'Hero signup' : 'CTA signup';
+        const sheetResult = await checkAndLogToSheets(emailValue, source);
+        if (sheetResult === 'duplicate') {
+          btn.textContent = originalText;
+          btn.disabled = false;
+          emailInput.value = '';
+          emailInput.disabled = false;
+          statusEl.textContent = 'This email is already registered. Thank you!';
+          statusEl.className += statusEl.className.includes('hero') ? ' hero__form-status--success' : ' cta-status--success';
+          return;
+        }
+        // Send welcome email via EmailJS (only for new signups)
         console.log('EmailJS sending to:', emailValue);
         const result = await emailjs.send('service_nnkp5w4', 'template_psx25re', { email: emailValue });
         console.log('EmailJS result:', result);
-        // Log to Google Sheets
-        const source = form.id === 'heroForm' ? 'Hero signup' : 'CTA signup';
-        logToSheets(emailValue, source);
         // Backup: notify contact@qorehealth.ai via Web3Forms
         notifyWeb3Forms(emailValue, accessKey);
 
