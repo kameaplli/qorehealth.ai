@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Thank You — QoreHealth</title>
+  <meta name="description" content="Thank you for your interest in QoreHealth. We'll be in touch soon with early access details." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/geist@1.3.1/dist/fonts/geist-sans/style.min.css" />
+
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --orange: #F4511E;
+      --pink: #E91E63;
+      --purple: #7C4DFF;
+      --gray-400: #9BA3B0;
+      --gray-600: #5A6270;
+      --gray-800: #2D3239;
+      --gray-900: #1A1D23;
+      --white: #FFFFFF;
+      --brand-gradient: linear-gradient(135deg, var(--orange), var(--pink), var(--purple));
+      --font: 'Geist Sans', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--font);
+      background: var(--gray-900);
+      color: var(--white);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* ── Animated background orbs ── */
+    .bg-orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(100px);
+      opacity: 0.15;
+      animation: orb-float 12s ease-in-out infinite;
+      pointer-events: none;
+    }
+    .bg-orb--1 {
+      width: 600px; height: 600px;
+      background: var(--orange);
+      top: -200px; left: -150px;
+      animation-delay: 0s;
+    }
+    .bg-orb--2 {
+      width: 500px; height: 500px;
+      background: var(--pink);
+      bottom: -180px; right: -100px;
+      animation-delay: -4s;
+    }
+    .bg-orb--3 {
+      width: 400px; height: 400px;
+      background: var(--purple);
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      animation-delay: -8s;
+    }
+    @keyframes orb-float {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      33% { transform: translate(30px, -40px) scale(1.05); }
+      66% { transform: translate(-20px, 30px) scale(0.95); }
+    }
+    .bg-orb--3 {
+      animation-name: orb-float-center;
+    }
+    @keyframes orb-float-center {
+      0%, 100% { transform: translate(-50%, -50%) scale(1); }
+      33% { transform: translate(-45%, -55%) scale(1.08); }
+      66% { transform: translate(-55%, -45%) scale(0.92); }
+    }
+
+    /* ── Subtle grid overlay ── */
+    .bg-grid {
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+      background-size: 60px 60px;
+      pointer-events: none;
+    }
+
+    /* ── Main content ── */
+    .content {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      max-width: 680px;
+      padding: 40px 24px;
+    }
+
+    /* ── Animated check circle ── */
+    .check-ring {
+      width: 100px; height: 100px;
+      margin: 0 auto 48px;
+      position: relative;
+    }
+    .check-ring svg {
+      width: 100%; height: 100%;
+    }
+    .check-ring__circle {
+      fill: none;
+      stroke: url(#grad);
+      stroke-width: 3;
+      stroke-dasharray: 283;
+      stroke-dashoffset: 283;
+      stroke-linecap: round;
+      animation: draw-circle 1s 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    }
+    .check-ring__check {
+      fill: none;
+      stroke: url(#grad);
+      stroke-width: 3.5;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      stroke-dasharray: 40;
+      stroke-dashoffset: 40;
+      animation: draw-check 0.5s 1.1s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    }
+    .check-ring__glow {
+      fill: none;
+      stroke: url(#grad);
+      stroke-width: 6;
+      stroke-dasharray: 283;
+      stroke-dashoffset: 283;
+      opacity: 0.2;
+      filter: blur(4px);
+      animation: draw-circle 1s 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    }
+    @keyframes draw-circle {
+      to { stroke-dashoffset: 0; }
+    }
+    @keyframes draw-check {
+      to { stroke-dashoffset: 0; }
+    }
+
+    /* ── Company wordmark — PROMINENT ── */
+    .wordmark {
+      font-family: var(--font);
+      font-weight: 900;
+      font-size: 72px;
+      letter-spacing: -2.5px;
+      line-height: 1;
+      margin-bottom: 20px;
+      filter: contrast(1.3) brightness(1.05);
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fade-up 0.8s 0.6s ease forwards;
+    }
+    .wordmark-qore {
+      background: linear-gradient(90deg, #F4511E, #E91E63);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .wordmark-health {
+      background: linear-gradient(90deg, #E91E63, #7C4DFF);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    /* ── Glowing line under wordmark ── */
+    .wordmark-glow {
+      width: 200px;
+      height: 2px;
+      margin: 0 auto 48px;
+      background: var(--brand-gradient);
+      border-radius: 2px;
+      position: relative;
+      opacity: 0;
+      animation: fade-up 0.6s 1s ease forwards;
+    }
+    .wordmark-glow::after {
+      content: '';
+      position: absolute;
+      inset: -3px -10px;
+      background: var(--brand-gradient);
+      filter: blur(12px);
+      opacity: 0.5;
+      border-radius: 4px;
+    }
+
+    /* ── Thank you heading ── */
+    .thank-title {
+      font-family: var(--font);
+      font-size: 2rem;
+      font-weight: 700;
+      letter-spacing: -0.8px;
+      color: var(--white);
+      margin-bottom: 16px;
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fade-up 0.8s 1.2s ease forwards;
+    }
+
+    .thank-subtitle {
+      font-size: 1.1rem;
+      font-weight: 400;
+      color: var(--gray-400);
+      line-height: 1.7;
+      max-width: 520px;
+      margin: 0 auto 40px;
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fade-up 0.8s 1.5s ease forwards;
+    }
+
+    /* ── What's next cards ── */
+    .next-steps {
+      display: flex;
+      gap: 16px;
+      margin-bottom: 48px;
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fade-up 0.8s 1.8s ease forwards;
+    }
+    .next-step {
+      flex: 1;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 16px;
+      padding: 24px 20px;
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+    .next-step:hover {
+      border-color: rgba(233,30,99,0.2);
+      box-shadow: 0 0 24px rgba(233,30,99,0.06);
+    }
+    .next-step__icon {
+      font-size: 1.6rem;
+      margin-bottom: 12px;
+      display: block;
+    }
+    .next-step__title {
+      font-weight: 600;
+      font-size: 0.9rem;
+      color: var(--white);
+      margin-bottom: 6px;
+    }
+    .next-step__desc {
+      font-size: 0.8rem;
+      color: var(--gray-400);
+      line-height: 1.5;
+    }
+
+    /* ── Back to home button ── */
+    .btn-home {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 14px 32px;
+      font-family: var(--font);
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--white);
+      background: var(--brand-gradient);
+      border: none;
+      border-radius: 100px;
+      text-decoration: none;
+      cursor: pointer;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      opacity: 0;
+      animation: fade-up 0.8s 2.1s ease forwards;
+    }
+    .btn-home:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 24px rgba(233,30,99,0.35);
+    }
+    .btn-home svg {
+      width: 16px; height: 16px;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    /* ── Particles ── */
+    .particles {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+    }
+    .particle {
+      position: absolute;
+      width: 4px; height: 4px;
+      border-radius: 50%;
+      opacity: 0;
+    }
+
+    @keyframes fade-up {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes particle-rise {
+      0% { opacity: 0; transform: translateY(0) scale(0); }
+      20% { opacity: 1; }
+      100% { opacity: 0; transform: translateY(-120px) scale(1); }
+    }
+
+    /* ── Footer ── */
+    .footer-note {
+      position: absolute;
+      bottom: 32px;
+      font-size: 0.75rem;
+      color: rgba(255,255,255,0.2);
+      letter-spacing: 0.5px;
+    }
+    .footer-note a {
+      color: rgba(255,255,255,0.35);
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+    .footer-note a:hover { color: var(--pink); }
+
+    /* ── Responsive ── */
+    @media (max-width: 768px) {
+      .wordmark { font-size: 52px; letter-spacing: -1.8px; }
+      .thank-title { font-size: 1.6rem; }
+      .thank-subtitle { font-size: 1rem; }
+      .next-steps { flex-direction: column; }
+      .check-ring { width: 80px; height: 80px; margin-bottom: 36px; }
+    }
+    @media (max-width: 480px) {
+      .wordmark { font-size: 42px; letter-spacing: -1.4px; }
+      .thank-title { font-size: 1.35rem; }
+      .thank-subtitle { font-size: 0.92rem; }
+      .content { padding: 32px 16px; }
+      .next-step { padding: 20px 16px; }
+      .wordmark-glow { width: 140px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Background effects -->
+  <div class="bg-orb bg-orb--1"></div>
+  <div class="bg-orb bg-orb--2"></div>
+  <div class="bg-orb bg-orb--3"></div>
+  <div class="bg-grid"></div>
+  <div class="particles" id="particles"></div>
+
+  <!-- Main content -->
+  <div class="content">
+
+    <!-- Animated check mark -->
+    <div class="check-ring">
+      <svg viewBox="0 0 100 100">
+        <defs>
+          <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#F4511E" />
+            <stop offset="50%" stop-color="#E91E63" />
+            <stop offset="100%" stop-color="#7C4DFF" />
+          </linearGradient>
+        </defs>
+        <circle class="check-ring__glow" cx="50" cy="50" r="45" />
+        <circle class="check-ring__circle" cx="50" cy="50" r="45" />
+        <polyline class="check-ring__check" points="32,52 45,65 70,38" />
+      </svg>
+    </div>
+
+    <!-- Company name — BIG and prominent -->
+    <div class="wordmark">
+      <span class="wordmark-qore">Qore</span><span class="wordmark-health">Health</span>
+    </div>
+    <div class="wordmark-glow"></div>
+
+    <!-- Thank you message -->
+    <h1 class="thank-title">Thank you for your interest</h1>
+    <p class="thank-subtitle">
+      You're now on the early access list. We'll reach out soon with exclusive
+      updates, beta invitations, and everything you need to start your family's
+      health intelligence journey.
+    </p>
+
+    <!-- What happens next -->
+    <div class="next-steps">
+      <div class="next-step">
+        <span class="next-step__icon">📧</span>
+        <div class="next-step__title">Check your inbox</div>
+        <div class="next-step__desc">A welcome email is on its way with details about QoreHealth beta.</div>
+      </div>
+      <div class="next-step">
+        <span class="next-step__icon">🚀</span>
+        <div class="next-step__title">Early access</div>
+        <div class="next-step__desc">You'll be among the first to experience the full platform when we launch.</div>
+      </div>
+      <div class="next-step">
+        <span class="next-step__icon">👨‍👩‍👧‍👦</span>
+        <div class="next-step__title">Family-first</div>
+        <div class="next-step__desc">Built for families — track health for every member from one dashboard.</div>
+      </div>
+    </div>
+
+    <!-- Back to home -->
+    <a href="index.html" class="btn-home">
+      <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6" /></svg>
+      Back to QoreHealth
+    </a>
+  </div>
+
+  <p class="footer-note">&copy; 2026 <a href="index.html">QoreHealth</a>. All rights reserved.</p>
+
+  <script>
+    // ── Celebration particles on load ──
+    const container = document.getElementById('particles');
+    const colors = ['#F4511E', '#E91E63', '#7C4DFF', '#FF7043', '#B388FF', '#F48FB1'];
+
+    function createParticle() {
+      const p = document.createElement('div');
+      p.classList.add('particle');
+      const color = colors[Math.floor(Math.random() * colors.length)];
+      const x = Math.random() * 100;
+      const size = 3 + Math.random() * 4;
+      const duration = 2 + Math.random() * 3;
+      const delay = Math.random() * 4;
+
+      p.style.cssText = `
+        left: ${x}%;
+        bottom: -10px;
+        width: ${size}px;
+        height: ${size}px;
+        background: ${color};
+        box-shadow: 0 0 ${size * 2}px ${color};
+        animation: particle-rise ${duration}s ${delay}s ease-out forwards;
+      `;
+      container.appendChild(p);
+      setTimeout(() => p.remove(), (duration + delay) * 1000);
+    }
+
+    // Burst of particles
+    for (let i = 0; i < 30; i++) createParticle();
+    // Ongoing gentle particles
+    setInterval(() => { if (document.visibilityState === 'visible') createParticle(); }, 400);
+  </script>
+</body>
+</html>
