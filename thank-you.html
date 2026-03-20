@@ -26,29 +26,35 @@
       --font: 'Geist Sans', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     }
 
-    html { scroll-behavior: smooth; }
+    html {
+      scroll-behavior: smooth;
+      -webkit-overflow-scrolling: touch;
+    }
 
     body {
       font-family: var(--font);
       background: var(--gray-900);
       color: var(--white);
       min-height: 100vh;
+      min-height: -webkit-fill-available;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      overflow: hidden;
+      overflow-x: hidden;
+      overflow-y: auto;
       position: relative;
     }
 
     /* ── Animated background orbs ── */
     .bg-orb {
-      position: absolute;
+      position: fixed;
       border-radius: 50%;
       filter: blur(100px);
       opacity: 0.15;
       animation: orb-float 12s ease-in-out infinite;
       pointer-events: none;
+      z-index: 0;
     }
     .bg-orb--1 {
       width: 600px; height: 600px;
@@ -85,7 +91,7 @@
 
     /* ── Subtle grid overlay ── */
     .bg-grid {
-      position: absolute;
+      position: fixed;
       inset: 0;
       background-image:
         linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
@@ -292,7 +298,7 @@
 
     /* ── Particles ── */
     .particles {
-      position: absolute;
+      position: fixed;
       inset: 0;
       pointer-events: none;
       z-index: 0;
@@ -317,8 +323,9 @@
 
     /* ── Footer ── */
     .footer-note {
-      position: absolute;
-      bottom: 32px;
+      position: relative;
+      margin-top: auto;
+      padding: 32px 0;
       font-size: 0.75rem;
       color: rgba(255,255,255,0.2);
       letter-spacing: 0.5px;
@@ -345,6 +352,7 @@
       .content { padding: 32px 16px; }
       .next-step { padding: 20px 16px; }
       .wordmark-glow { width: 140px; }
+      .bg-orb { display: none; }
     }
   </style>
 </head>
