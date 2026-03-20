@@ -1688,6 +1688,17 @@
 
     // ── EmailJS is loaded in <head> ──
 
+    // ── Log signup to Google Sheets ──
+    const SHEETS_URL = 'https://script.google.com/macros/s/AKfycbwH3pt9UZH8nGGu3YnSNjk-hxCwkPExk46e_w2dbSvsZkVa7ujgHoK_MTgRglaWypV7ug/exec';
+    function logToSheets(email, source) {
+      fetch(SHEETS_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: email, source: source })
+      }).catch(() => {});
+    }
+
     // ── Web3Forms backup notification to contact@qorehealth.ai ──
     function notifyWeb3Forms(email, accessKey) {
       if (!accessKey) return;
@@ -1715,6 +1726,9 @@
         console.log('EmailJS sending to:', emailValue);
         const result = await emailjs.send('service_nnkp5w4', 'template_psx25re', { email: emailValue });
         console.log('EmailJS result:', result);
+        // Log to Google Sheets
+        const source = form.id === 'heroForm' ? 'Hero signup' : 'CTA signup';
+        logToSheets(emailValue, source);
         // Backup: notify contact@qorehealth.ai via Web3Forms
         notifyWeb3Forms(emailValue, accessKey);
 
