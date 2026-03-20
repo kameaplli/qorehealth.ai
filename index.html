@@ -1688,16 +1688,23 @@
 
     // ── EmailJS is loaded in <head> ──
 
-    // ── Check duplicate & log signup to Google Sheets ──
+    // ── Google Sheets: check duplicate (GET) & log signup (POST) ──
     const SHEETS_URL = 'https://script.google.com/macros/s/AKfycbwH3pt9UZH8nGGu3YnSNjk-hxCwkPExk46e_w2dbSvsZkVa7ujgHoK_MTgRglaWypV7ug/exec';
-    async function checkAndLogToSheets(email, source) {
-      const resp = await fetch(SHEETS_URL, {
+
+    async function isDuplicate(email) {
+      try {
+        const resp = await fetch(SHEETS_URL + '?email=' + encodeURIComponent(email));
+        const data = await resp.json();
+        return data.result === 'duplicate';
+      } catch { return false; } // if check fails, allow signup
+    }
+
+    function logToSheets(email, source) {
+      fetch(SHEETS_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'text/plain' },
         body: JSON.stringify({ email: email, source: source })
-      });
-      const data = await resp.json();
-      return data.result; // 'success' or 'duplicate'
+      }).catch(() => {});
     }
 
     // ── Web3Forms backup notification to contact@qorehealth.ai ──
@@ -1723,10 +1730,11 @@
       statusEl.className = statusEl.className.replace(/--success|--error/g, '').trim();
 
       try {
-        // Check for duplicate in Google Sheets first
         const source = form.id === 'heroForm' ? 'Hero signup' : 'CTA signup';
-        const sheetResult = await checkAndLogToSheets(emailValue, source);
-        if (sheetResult === 'duplicate') {
+
+        // Check for duplicate in Google Sheets first
+        const duplicate = await isDuplicate(emailValue);
+        if (duplicate) {
           btn.textContent = originalText;
           btn.disabled = false;
           emailInput.value = '';
@@ -1735,10 +1743,15 @@
           statusEl.className += statusEl.className.includes('hero') ? ' hero__form-status--success' : ' cta-status--success';
           return;
         }
+
         // Send welcome email via EmailJS (only for new signups)
         console.log('EmailJS sending to:', emailValue);
         const result = await emailjs.send('service_nnkp5w4', 'template_psx25re', { email: emailValue });
         console.log('EmailJS result:', result);
+
+        // Log to Google Sheets
+        logToSheets(emailValue, source);
+
         // Backup: notify contact@qorehealth.ai via Web3Forms
         notifyWeb3Forms(emailValue, accessKey);
 
